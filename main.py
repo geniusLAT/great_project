@@ -1,6 +1,7 @@
 #!/usr/bin/python 
 from transformers import pipeline
 import telebot
+import Gmap
 
 user_datas=[]
 
@@ -40,6 +41,12 @@ bot=telebot.TeleBot(token)
 
 def process(ud):
     print("process")
+
+    places=    Gmap.get_nameful_array(ud.latitude,ud.longitude)
+
+    bot.send_message(ud.user_id,str(places))
+
+    return str(places)
 
 
 @bot.message_handler(content_types='text')

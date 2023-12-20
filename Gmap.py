@@ -98,10 +98,12 @@ def get_nameful_array(lat,lon):
         print(tag)
         print('-------------------------------')
 
+    result =''
     for tag in importants:
-        parse_tag(tag)
-
+        result +=parse_tag(tag)+'\n'
+    return result
     lines=w.split('\n')
+
 
 
 
@@ -122,4 +124,4 @@ def get_nameful_array(lat,lon):
 #        pass
             
 
-w = get_nameful_array( 56.843396, 60.650773)
+#w = get_nameful_array( 56.843396, 60.650773)
