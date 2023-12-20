@@ -44,6 +44,38 @@ out skel qt;'''
 
 #w=get_data(cmd)
 #print(w)
+
+
+def parse_tag(tag):
+    result=''
+    try:
+        housenumber = tag.split('housenumber":')[1]
+        housenumber=housenumber.split('\n')[0]
+        housenumber= housenumber.replace(',','').replace('"','')
+        #print(housenumber)
+        result=' '+housenumber
+    except:
+        pass
+    try:
+        street = tag.split('street":')[1]
+        street=street.split('\n')[0]
+        street= street.replace(',','').replace('"','')
+        #print(street)
+        result=street+result
+    except:
+        pass
+    try:
+        name = tag.split('name":')[1]
+        name=name.split('\n')[0]
+        name= name.replace(',','').replace('"','')
+        #print(name)
+        result=name+", "+result
+    except:
+        pass
+    print(result)
+    return result
+
+
 def get_nameful_array(lat,lon):
     w = get_places( lat, lon,1000)
 
@@ -54,11 +86,20 @@ def get_nameful_array(lat,lon):
         parts=tag.split('}')
         tags.append(parts[0])
 
+
+    importants=[]
+    for tag in tags:
+        if ('housenumber'  in tag) and ('street'  in tag)and ('name'  in tag):
+            importants.append(tag)
+            
     
 
-    for tag in tags:
+    for tag in importants:
         print(tag)
         print('-------------------------------')
+
+    for tag in importants:
+        parse_tag(tag)
 
     lines=w.split('\n')
 
