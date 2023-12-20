@@ -59,13 +59,16 @@ def process(ud):
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    ud = get_user_data(message.chat.id)
-    ud.set_request(message.text)
-    if ud.check():
-        bot.send_message(message.chat.id,str('Бот работает. Ожидайте'))
-        process(ud)
-    else:
-        bot.send_message(message.chat.id,str('Пришлите локацию через телеграм'))
+    try:
+        ud = get_user_data(message.chat.id)
+        ud.set_request(message.text)
+        if ud.check():
+            bot.send_message(message.chat.id,str('Бот работает. Ожидайте'))
+            process(ud)
+        else:
+            bot.send_message(message.chat.id,str('Пришлите локацию через телеграм'))
+    except Exception as e:
+        print(e)
 
 '''
 @bot.message_handler(commands=["geo"])
@@ -78,17 +81,20 @@ def geo(message):
 
 @bot.message_handler(content_types=["location"])
 def location(message):
-    if message.location is not None:
-        print(message.location)
-        print("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude))
-        #bot.send_message(message.chat.id,str("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude)))
-        ud = get_user_data(message.chat.id)
-        ud.set_coordinate(message.location.latitude,message.location.longitude)
-        if ud.check():
-            bot.send_message(message.chat.id,str('Бот работает. Ожидайте'))
-            process(ud)
-        else:
-            bot.send_message(message.chat.id,str('Напишите ваш текстовый запрос'))
+    try:
+        if message.location is not None:
+            print(message.location)
+            print("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude))
+            #bot.send_message(message.chat.id,str("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude)))
+            ud = get_user_data(message.chat.id)
+            ud.set_coordinate(message.location.latitude,message.location.longitude)
+            if ud.check():
+                bot.send_message(message.chat.id,str('Бот работает. Ожидайте'))
+                process(ud)
+            else:
+                bot.send_message(message.chat.id,str('Напишите ваш текстовый запрос'))
+    except Exception as e:
+        print(e)
 
 '''
 def AI_example():
