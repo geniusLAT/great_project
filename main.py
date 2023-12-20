@@ -81,7 +81,7 @@ def location(message):
     if message.location is not None:
         print(message.location)
         print("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude))
-        bot.send_message(message.chat.id,str("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude)))
+        #bot.send_message(message.chat.id,str("latitude: %s; longitude: %s" % (message.location.latitude, message.location.longitude)))
         ud = get_user_data(message.chat.id)
         ud.set_coordinate(message.location.latitude,message.location.longitude)
         if ud.check():
