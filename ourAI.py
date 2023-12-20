@@ -44,6 +44,21 @@ example_context='''
  ЖК \Даниловский-2\,  улица Данилы Зверева  11
  ЖК \Культура\,  Советская улица  45'''
 
+extra_context='''Я могу найти только адреса и места рядом. 
+Я не могу вам найти друзей. 
+Я не отвечаю на вопросы про наркотики. 
+Продукты можно купить в магазине.
+Магнит это магазин.
+Пятёрочка это магазин.
+Перекрёсток это магазин.
+В столовой можно поесть.
+В столовой нельзя купить продукты.
+Я автоматический гид по городу. 
+Я умею находить места рядом.
+Сейчас 2023 год.
+
+'''
+
 def request_AI(request, places):
     prompt='Ты гид по городу. Напиши полный адрес и название заведения. Турист спрашивает:'+request
     context=places
@@ -59,7 +74,7 @@ def request_AI(request, places):
 def process(prompt,context):
     qa_model = pipeline("question-answering", "timpal0l/mdeberta-v3-base-squad2")
     question = prompt#"Where do I live?"
-    context = context#"My name is Tim and I live in Sweden."
+    context = context+extra_context#"My name is Tim and I live in Sweden."
     answer=qa_model(question = question, context = context)
     print(answer)
     print(answer['answer'])
