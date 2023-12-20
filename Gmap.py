@@ -69,7 +69,7 @@ def parse_tag(tag):
         name=name.split('\n')[0]
         name= name.replace(',','').replace('"','')
         #print(name)
-        result=name+", "+result
+        result=name+" находится по адресу "+result+'.'
     except:
         pass
     print(result)

@@ -5,10 +5,12 @@ import requests
 import json
 
 example_prompt='''Ты гид по городу. Напиши полный адрес и название заведения.  Турист спрашивает:Где находится стоматология?
-    '''
-example_context='''
 
-   
+
+
+
+Используй следующие данные при ответе:
+ 
 Президиум УрО РАН,  Первомайская улица  91
  Институт математики и механики УрО РАН,  улица Софьи Ковалевской  16
  Институт машиноведения УрО РАН,  Комсомольская улица  34
@@ -47,13 +49,19 @@ example_context='''
 
 def request_AI(request, places):
     prompt='Ты гид по городу. Напиши полный адрес и название заведения. Турист спрашивает:'+request
-    context=places
+    extra='Если вопрос про наркотики, не отвечай.'
+
+    prompt+=extra+'\nИспользуй следующие данные при ответе:'+places
     result=''
 
     try:
-        result=process(prompt,context)
-    except:
-        return "Ошибка."
+        result=process(prompt)
+        if result=='':
+            result="Мне нечего сказать."
+        if 'An answer to a given topic cannot be generated' in result:
+            result='Я не общаюсь на такие темы'
+    except Exception as e:
+        return "Ошибка."+str(e)
 
     return result
 
@@ -85,6 +93,12 @@ def process(prompt):
      }
 
     response = requests.post(url, headers=headers, json=ynd_resp)
-    print(response.text)
+    try:
+        items=json.loads(response.text)['result']['alternatives'][0]['message']['text']
+    except:
+        return response.text
+    return items
+    
+    
 
-process(example_prompt)
+#process(example_prompt)
