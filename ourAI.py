@@ -1,7 +1,8 @@
 print("ai - ok")
 
 from transformers import pipeline
-
+import requests
+import json
 
 example_prompt='''Ты гид по городу. Напиши полный адрес и название заведения.  Турист спрашивает:Где находится стоматология?
     '''
@@ -56,146 +57,34 @@ def request_AI(request, places):
 
     return result
 
-def process(prompt,context):
-    qa_model = pipeline("question-answering", "timpal0l/mdeberta-v3-base-squad2")
-    question = prompt#"Where do I live?"
-    context = context#"My name is Tim and I live in Sweden."
-    answer=qa_model(question = question, context = context)
-    print(answer)
-    print(answer['answer'])
-    return answer['answer']
+def process(prompt):
 
-#process(example_prompt,example_context)
-'''
-#
+    ynd_resp = {
+      "modelUri": "gpt://b1gru1tcrb4aat5lmuf0/yandexgpt-lite",
+      "completionOptions": {
+          "stream": False,
+         "temperature": 0.6,
+          "maxTokens": "2000"
+      },
+     "messages": [
+         {
+             "role": "system",
+             "text": "Ты городской гид"
+             },
+         {
+             "role": "user",
+             "text": prompt
+         }
+         ]
+      }
 
-import requests
-import pydantic
+    url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+    headers = {
+     "Content-Type": "application/json",
+     "Authorization": "Api-Key AQVNwbGOjHNJs9qHSXcXfQhyub6NXcRSxUxcTmsn"
+     }
 
-from datetime import datetime, date, time
-
-
-# URL для запроса к Yandex GPT
-YGPT_URL: str = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
-
-
-# Модели данных для запросов
-class YGPTCompletionOptionsReq(pydantic.BaseModel):
-    stream: bool
-    temperature: float
-    maxTokens: int
-
-class YGPTMessageReq(pydantic.BaseModel):
-    role: str
-    text: str
-
-class YGPTRequest(pydantic.BaseModel):
-    modelUri: str
-    completionOptions: YGPTCompletionOptionsReq
-    messages: list[YGPTMessageReq]
-    
-# Модели данных для ответов
-class YGPTMessageRes(pydantic.BaseModel):
-    role: str 
-    text: str
-
-class YGPTAlternativeRes(pydantic.BaseModel):
-    message: YGPTMessageRes
-    status: str
-    
-class YGPTUsageRes(pydantic.BaseModel):
-    completionTokens: str
-    inputTextTokens: str
-    totalTokens: str
-    
-class YGPTResultRes(pydantic.BaseModel):
-    alternatives: list[YGPTAlternativeRes]
-    modelVersion: str 
-    usage: YGPTUsageRes
-    
-class YGPTResponse(pydantic.BaseModel):
-    result: YGPTResultRes
-    
-    
-# Определение контекста для истории сообщений
-history = list()
-    
-
-# Метод отправки запросов к модели
-def ygpt_send_question(question: str) -> str:
-
-    if not question:
-        return ""
-    
-    comp_options = YGPTCompletionOptionsReq(
-        stream=False,
-        temperature=0,
-        maxTokens=1000
-    )
-
-    # Тут надо указать каталог пользователя
-    # И еще тут указывается тип модели
-    # Подробнее - https://cloud.yandex.ru/docs/yandexgpt/concepts/models
-    ygpt_req = YGPTRequest(
-        modelUri='gpt://<каталог>/yandexgpt-lite',
-        completionOptions=comp_options,
-        messages=history
-    )
-        
-    # Если запускается в первый раз, то добавить определение модели
-    if not len(history):
-        # Создание системного сообщения для модели
-        # Тут настраивается промт для самоопределения модели
-        msg_system = YGPTMessageReq(
-            role='system',
-            text='Ты - справочник по <тема>.'
-        )
-        list.append(history, msg_system)
-        ygpt_req.messages.append(msg_system)
-
-    # Добавляется вопрос пользователя
-    msg_user = YGPTMessageReq(
-        role='user',
-        text=question
-    )
-    list.append(history, msg_user)
-    ygpt_req.messages.append(msg_user)
-    
-    # Тут указать API ключ
-    headers = {'Authorization': 'Api-Key AQVNwbGOjHNJs9qHSXcXfQhyub6NXcRSxUxcTmsn'}
-
-    DUMP=ygpt_req.model_dump()
-
-    print(DUMP)
-
-    response = requests.post(YGPT_URL, 
-                             headers=headers,
-                             json=DUMP)
-
+    response = requests.post(url, headers=headers, json=ynd_resp)
     print(response.text)
-    
-    ygpt_res = YGPTResponse.model_validate_json(response.text)
-    
-    # Ничего не вернула
-    if len(ygpt_res.result.alternatives) == 0:
-        return "" 
-    
-    # Добавление ответа в историю
-    msg_assistant = YGPTMessageReq(
-        role='assistant',
-        text=ygpt_res.result.alternatives[0].message.text
-    )
-    list.append(history, msg_assistant)    
-    
-    return ygpt_res.result.alternatives[0].message.text
 
-
-
-
-# Можно копировать этот код или вызвать какое то количество раз
-# Тогда будет подобие диалога
-#question = input("Введите вопрос: ")
-question ='Кто изобрёл велосипед?'
-print(f'-> Вопрос для Яндекс.GPT: {question}')
-print(f'-> Ответ Яндекс.GPT: \n{ygpt_send_question(question)}', end='\n\n')
-'''
+process(example_prompt)
