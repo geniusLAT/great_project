@@ -3,6 +3,8 @@ from transformers import pipeline
 import telebot
 import Gmap
 
+import ourAI
+
 user_datas=[]
 
 class user_data(object):
@@ -44,9 +46,15 @@ def process(ud):
 
     places=    Gmap.get_nameful_array(ud.latitude,ud.longitude)
 
-    bot.send_message(ud.user_id,str(places))
+    result = ourAI.request_AI(ud.request,places)
 
-    return str(places)
+    bot.send_message(ud.user_id,result)
+
+    ud.request=None #user has not to send location twice, but has to send request only once
+    #it lets him to send multiple requests about one locations. And it forbids to send 
+    #multiple locations for one requests. 
+
+    return str(result)
 
 
 @bot.message_handler(content_types='text')
