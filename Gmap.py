@@ -44,36 +44,41 @@ out skel qt;'''
 
 #w=get_data(cmd)
 #print(w)
+def get_nameful_array(lat,lon):
+    w = get_places( lat, lon,1000)
+
+    tags_array= w.split('"tags": {')
+
+    tags=[]
+    for tag in tags_array:
+        parts=tag.split('}')
+        tags.append(parts[0])
+
     
-w = get_places( 56.843396, 60.650773,1000)
 
-tags_array= w.split('"tags": {')
+    for tag in tags:
+        print(tag)
+        print('-------------------------------')
 
-t=[]
-for tag in tags_array:
-    parts=tag.split('}')
-    t.append(parts[0])
-
-for tag in t:
-    print(tag)
-    print('-------------------------------')
-
-lines=w.split('\n')
+    lines=w.split('\n')
 
 
 
-for line in lines:
-    if 'name' in line:
-        #print(line)
-        w=w.replace(line,line+'✅')
+    for line in lines:
+        if 'name' in line:
+            #print(line)
+            w=w.replace(line,line+'✅')
 
 #print(w)
 
-file= open('map.txt','w')
+#file= open('map.txt','w')
 #file.write(w)
 
-for letter in w:
-    try:
-        file.write(letter)
-    except:
-        pass
+#for letter in w:
+#    try:
+#        file.write(letter)
+#    except:
+#        pass
+            
+
+w = get_nameful_array( 56.843396, 60.650773)
