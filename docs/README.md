@@ -37,7 +37,20 @@
 Примеры, как использовать ваш продукт для решения проблем.
 
 Наш телеграм бот поможет пользователям быстро сориентироваться на местности в незнакомом городе, подскажет где можно перекусить, закупиться продуктами или отдохнуть. Cкриншоты работы бота вы можете найти в папке проекта images.
+
 ![Screenshot 1](https://github.com/geniusLAT/great_project/blob/72b19d0911843447abb5030784f3b3be5f8816d9/Pasted%20image%2020231221011436.png?raw=true)
+
+![Screenshot 2](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011520.png?raw=true)
+
+![Screenshot 3](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011544.png?raw=true)
+
+![Screenshot 4](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011603.png?raw=true)
+
+![Screenshot 5](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011653.png?raw=true)
+
+![Screenshot 6](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011820.png?raw=true)
+
+![Screenshot 7](https://github.com/geniusLAT/great_project/blob/main/images/Pasted%20image%2020231221011836.png?raw=true)
 
 
 ## Команда
